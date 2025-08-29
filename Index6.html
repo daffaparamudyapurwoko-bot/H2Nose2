@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, initial-scale=1.0">
+  <title>HydroNose Monitoring</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #2e2e2e;
+      color: white;
+      display: flex; /* Use flexbox for body to center content */
+      justify-content: center;
+      align-items: center;
+      min-height: 800px; /* Set minimum height for 800px */
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      gap: 20px;
+      width: 1280px; /* Set container width to 1280px */
+      box-sizing: border-box; /* Include padding in the width */
+    }
+
+    .card {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      width: 300px; /* Keep card width as is */
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+
+    .rec {
+      color: red;
+      font-weight: bold;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .gas {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 8px 0;
+      font-size: 20px;
+    }
+
+    .gas span.value {
+      color: #66ccff;
+      font-weight: bold;
+      margin: 0 5px;
+    }
+
+    .arrow-up {
+      color: #00ff00;
+    }
+
+    .arrow-down {
+      color: #ff3333;
+    }
+
+    .btn {
+      background: #333;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .temp-hum {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      background: linear-gradient(to right, #f39c12, #e67e22);
+      border-radius: 8px;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    /* Bottom nav */
+    .nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+    }
+
+    .nav button {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .record-btn {
+      background: red;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    .graph {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 15px;
+    }
+
+    /* New styles for single page view */
+    .card-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card-wrapper">
+      <!-- First Screen -->
+      <div class="card" id="firstCard">
+        <div class="header">
+          <span>Sun 26 Dec 09:32 PM<br>Δ 3 | ✕ 0 | 192.168.0.0</span>
+          <span class="rec">REC 01:21<br>Aliyah 2.4Ghz</span>
+        </div>
+        <div class="title">HydroNose Monitoring<br><small>Shown in Parts Per Million (PPM)</small></div>
+        <div class="gas">H2 <span id="h2" class="value">400</span> <span id="h2-arrow" class="arrow-up">▲</span></div>
+        <div class="gas">CO2 <span id="co2" class="value">50</span> <span id="co2-arrow" class="arrow-down">▼</span></div>
+        <div class="gas">CO <span id="co" class="value">1</span> <span id="co-arrow" class="arrow-down">▼</span></div>
+        <div class="gas">CH4 <span id="ch4" class="value">1000</span> <span id="ch4-arrow" class="arrow-up">▲</span></div>
+        <button class="btn" id="viewMoreBtn">View More</button>
+        <div class="temp-hum">
+          <span>Temperature<br><span id="temp">36</span>°C</span>
+          <span>Humidity<br><span id="hum">10</span>%</span>
+        </div>
+      </div>
+
+      <!-- Second Screen -->
+      <div class="card hidden" id="secondCard">
+        <div class="header">
+          <span>09:32 PM<br>Connected to Aliyah 2.4Ghz</span>
+          <span class="rec">REC 01:21</span>
+        </div>
+        <canvas id="chart" class="graph"></canvas>
+        <div class="title">HydroNose Monitoring</div>
+        <div class="gas">H2 <span id="h2b" class="value">400</span></div>
+        <div class="gas">CO2 <span id="co2b" class="value">50</span></div>
+        <div class="gas">CO <span id="cob" class="value">1</span></div>
+        <div class="gas">CH4 <span id="ch4b" class="value">1000</span></div>
+        <button class="btn" id="backBtn">Back</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="nav">
+    <button>Monitor</button>
+    <button id="recordBtn" class="record-btn">●</button>
+    <button>Files</button>
+  </div>
+
+  <script>
+    // Initial values
+    let values = {
+      h2: 400,
+      co2: 50,
+      co: 1,
+      ch4: 1000,
+      temp: 36,
+      hum: 10
+    };
+
+    function updateValue(key, min, max) {
+      let old = values[key];
+      let newVal = old + Math.floor(Math.random() * 11 - 5); // -5 to +5 variation
+      if (newVal < min) newVal = min;
+      if (newVal > max) newVal = max;
+      values[key] = newVal;
+
+      // Update display
+      document.getElementById(key).textContent = newVal;
+      if (document.getElementById(key + "b")) {
+        document.getElementById(key + "b").textContent = newVal;
+      }
+
+      // Update arrow direction (if arrow exists)
+      let arrow = document.getElementById(key + "-arrow");
+      if (arrow) {
+        if (newVal > old) {
+          arrow.textContent = "▲";
+          arrow.className = "arrow-up";
+        } else if (newVal < old) {
+          arrow.textContent = "▼";
+          arrow.className = "arrow-down";
+        }
+      }
+    }
+
+    function updateTempHum() {
+      values.temp += Math.floor(Math.random() * 3 - 1); // -1 to +1
+      values.hum += Math.floor(Math.random() * 3 - 1);
+      if (values.hum < 0) values.hum = 0;
+      if (values.hum > 100) values.hum = 100;
+
+      document.getElementById("temp").textContent = values.temp;
+      document.getElementById("hum").textContent = values.hum;
+    }
+
+    // Chart.js line chart
+    const ctx = document.getElementById("chart").getContext("2d");
+    const chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [{
+          label: "H2 (ppm)",
+          data: [],
+          borderColor: "#66ccff",
+          fill: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: "#fff" } } },
+        scales: {
+          x: { ticks: { color: "#fff" } },
+          y: { ticks: { color: "#fff" } }
+        }
+      }
+    });
+
+    // Update loop
+    setInterval(() => {
+      updateValue("h2", 300, 500);
+      updateValue("co2", 30, 70);
+      updateValue("co", 0, 10);
+      updateValue("ch4", 900, 1100);
+      updateTempHum();
+
+      // Update chart with latest H2 value
+      chart.data.labels.push(new Date().toLocaleTimeString().split(" ")[0]);
+      chart.data.datasets[0].data.push(values.h2);
+      if (chart.data.labels.length > 10) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+      }
+      chart.update();
+    }, 2000);
+
+    // Record button toggle
+    const recordBtn = document.getElementById("recordBtn");
+    let recording = true;
+    recordBtn.addEventListener("click", () => {
+      recording = !recording;
+      recordBtn.style.background = recording ? "red" : "gray";
+    });
+
+    // Page switching logic
+    const firstCard = document.getElementById("firstCard");
+    const secondCard = document.getElementById("secondCard");
+    const viewMoreBtn = document.getElementById("viewMoreBtn");
+    const backBtn = document.getElementById("backBtn");
+
+    viewMoreBtn.addEventListener("click", () => {
+      firstCard.classList.add("hidden");
+      secondCard.classList.remove("hidden");
+    });
+
+    backBtn.addEventListener("click", () => {
+      secondCard.classList.add("hidden");
+      firstCard.classList.remove("hidden");
+    });
+  </script>
+
+</body>
+</html>
