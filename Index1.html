@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydroNose Monitoring</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #2e2e2e;
+      color: white;
+    }
+
+    .card {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      width: 350px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+
+    .rec {
+      background: red;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .wifi {
+      text-align: right;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 12px;
+      color: #66ccff;
+      margin-bottom: 20px;
+    }
+
+    .gas {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 12px 0;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .gas span.value {
+      color: #66ccff;
+      font-size: 24px;
+      margin-right: 8px;
+    }
+
+    .arrow-up {
+      color: #00ff00;
+      font-size: 20px;
+    }
+
+    .arrow-down {
+      color: #ff3333;
+      font-size: 20px;
+    }
+
+    .btn {
+      background: #333;
+      border: 1px solid #444;
+      padding: 12px;
+      width: 100%;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .temp-hum {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      background: linear-gradient(to right, #f39c12, #e67e22);
+      border-radius: 8px;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .temp-hum span {
+      color: white;
+    }
+
+    /* Bottom nav */
+    .nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: white;
+      font-size: 14px;
+    }
+
+    .record-btn {
+      background: radial-gradient(circle, red 40%, #660000 100%);
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      border: none;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="header">
+      <div>
+        Sun 26 Dec 09:32 PM<br>
+        ⚠ 3 | ✕ 0 | 192.168.0.0
+      </div>
+      <div>
+        <span class="rec">REC 01:21</span><br>
+        <span class="wifi">Aliyah 2.4Ghz</span>
+      </div>
+    </div>
+
+    <div class="title">HydroNose Monitoring</div>
+    <div class="subtitle">Shown in Parts Per Million (PPM)</div>
+
+    <div class="gas">H2 <span class="value">400</span><span class="arrow-up">▲</span></div>
+    <div class="gas">CO2 <span class="value">50</span><span class="arrow-down">▼</span></div>
+    <div class="gas">CO <span class="value">1</span><span class="arrow-down">▼</span></div>
+    <div class="gas">CH4 <span class="value">1000</span><span class="arrow-up">▲</span></div>
+
+    <button class="btn">View More</button>
+
+    <div class="temp-hum">
+      <span>Temperature<br>36°C</span>
+      <span>Humidity<br>10%</span>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="nav">
+    <div class="nav-item">📈<br>Monitor</div>
+    <button class="record-btn">●</button>
+    <div class="nav-item">📂<br>Files</div>
+  </div>
+
+</body>
+</html>
