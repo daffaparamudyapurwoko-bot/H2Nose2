@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=480, height=800, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>HydroNose Monitoring</title>
+  <style>
+    body {
+      margin: 0;
+      background: #2e2e2e;
+      font-family: Arial, sans-serif;
+      color: white;
+      width: 480px;
+      height: 800px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      font-size: 12px;
+      color: #ccc;
+    }
+
+    .rec {
+      background: red;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 4px;
+      display: inline-block;
+    }
+
+    .card {
+      background: #1e1e1e;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 11px;
+      color: #66ccff;
+      margin-bottom: 10px;
+    }
+
+    .gas {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 12px 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .gas span.value {
+      color: #66ccff;
+      font-size: 18px;
+      margin-right: 8px;
+    }
+
+    .arrow-up { color: #00ff00; }
+    .arrow-down { color: #ff3333; }
+
+    .btn {
+      background: #333;
+      border: 1px solid #444;
+      padding: 12px;
+      width: 100%;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .btn:active { background: #555; }
+
+    .temp-hum {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      background: linear-gradient(to right, #f39c12, #e67e22);
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Bottom nav */
+    .nav {
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+    }
+
+    .nav-item {
+      text-align: center;
+      color: white;
+      font-size: 14px;
+    }
+
+    .record-btn {
+      background: red;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      border: none;
+      color: white;
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -15px;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+
+    .record-btn:active {
+      background: #660000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      Sun 26 Dec 09:32 PM<br>
+      ⚠ 3 | ✕ 0 | 192.168.0.0
+    </div>
+    <div style="text-align: right;">
+      <span class="rec">REC 01:21</span><br>
+      Aliyah 2.4Ghz
+    </div>
+  </div>
+
+  <div class="card">
+    <div>
+      <div class="title">HydroNose Monitoring</div>
+      <div class="subtitle">Shown in Parts Per Million (PPM)</div>
+
+      <div class="gas">H2 <span class="value">400</span><span class="arrow-up">▲</span></div>
+      <div class="gas">CO2 <span class="value">50</span><span class="arrow-down">▼</span></div>
+      <div class="gas">CO <span class="value">1</span><span class="arrow-down">▼</span></div>
+      <div class="gas">CH4 <span class="value">1000</span><span class="arrow-up">▲</spa
